@@ -24,6 +24,9 @@ def chat():
     print("OpenAI Chat (type 'quit' to exit)")
     print("-" * 40)
 
+    # Initialize conversation history
+    conversation_history = []
+
     while True:
         # Read user input
         user_input = input("\nYou: ").strip()
@@ -36,16 +39,22 @@ def chat():
             continue
 
         try:
-            # Send to OpenAI API
+            # Append user message to conversation history
+            conversation_history.append({"role": "user", "content": user_input})
+
+            # Send to OpenAI API with full conversation history
             response = client.chat.completions.create(
                 model="gpt-3.5-turbo",
-                messages=[
-                    {"role": "user", "content": user_input}
-                ]
+                messages=conversation_history
             )
 
-            # Print response
+            # Get assistant's response
             assistant_message = response.choices[0].message.content
+
+            # Append assistant's response to conversation history
+            conversation_history.append({"role": "assistant", "content": assistant_message})
+
+            # Print response
             print(f"\nAssistant: {assistant_message}")
 
         except AuthenticationError:
