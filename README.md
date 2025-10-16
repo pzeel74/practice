@@ -1,134 +1,173 @@
-# OpenAI Chat Application
+# OpenAI Chat Application with RAG
 
-A simple command-line chat application that uses OpenAI's GPT-3.5-turbo model to provide conversational AI interactions. The application maintains conversation history and provides a clean terminal-based interface.
+A Python command-line chat application with two modes:
+1. **Normal Chat** - Traditional AI conversation with persistent memory
+2. **Book Chat (RAG)** - Ask questions about any book using vector search and AI
+
+## What is This Project?
+
+This project demonstrates three progressive AI implementation tasks:
+
+- **Task 1**: Basic OpenAI chat integration
+- **Task 2**: Persistent conversation history (saved to JSON)
+- **Task 3**: RAG (Retrieval-Augmented Generation) - chat with books using Pinecone vector database
+
+The Book Chat mode prevents AI hallucination by only answering based on actual book content, using semantic search to find relevant passages.
 
 ## Features
 
-- Interactive command-line chat interface
-- Conversation history maintenance
-- Error handling for API issues
-- Environment variable configuration for API key security
-- Graceful exit options
+### Normal Chat
+- Real-time conversation with GPT-3.5-turbo
+- Conversation history persists across sessions
+- Context-aware responses
 
-## Prerequisites
+### Book Chat (RAG)
+- Upload text or PDF books
+- Intelligent text chunking (~500 words)
+- Vector embeddings via OpenAI
+- Semantic search with Pinecone
+- Answers based ONLY on book content
 
-- Python 3.7 or higher
+## Quick Start
+
+### 1. Prerequisites
+- Python 3.7+
 - OpenAI API key
+- Pinecone API key (for Book Chat mode)
 
-## Installation
+### 2. Installation
 
-1. **Clone the repository:**
-   ```bash
-   git clone https://github.com/pzeel74/practice.git
-   cd practice
-   ```
+```bash
+# Clone the repository
+git clone https://github.com/pzeel74/practice.git
+cd practice
 
-2. **Create a virtual environment:**
-   ```bash
-   python -m venv .venv
-   source .venv/bin/activate  # On Windows: .venv\Scripts\activate
-   ```
+# Create virtual environment
+python3 -m venv .venv
+source .venv/bin/activate  # On Windows: .venv\Scripts\activate
 
-3. **Install dependencies:**
-   ```bash
-   pip install -r requirements.txt
-   ```
+# Install dependencies
+pip install -r requirements.txt
 
-4. **Set up environment variables:**
-   Create a `.env` file in the project root and add your OpenAI API key:
-   ```
-   OPENAI_API_KEY=your_openai_api_key_here
-   ```
-   
-   To get an OpenAI API key:
-   - Visit [OpenAI Platform](https://platform.openai.com/)
-   - Sign up or log in to your account
-   - Go to API Keys section
-   - Create a new secret key
+# Set up API keys
+cp .env.example .env
+# Edit .env and add your API keys
+```
+
+### 3. Get API Keys
+
+**OpenAI API Key:**
+- Visit [OpenAI Platform](https://platform.openai.com/)
+- Create an account and generate an API key
+- Add to `.env` file
+
+**Pinecone API Key (for Book Chat):**
+- Visit [Pinecone](https://www.pinecone.io/)
+- Create a free account
+- Create an index: name=`book-chat`, dimensions=`1536`, metric=`cosine`
+- Add API key to `.env` file
+
+### 4. Run the Application
+
+```bash
+source .venv/bin/activate
+python chat.py
+```
+
+**On Apple Silicon Macs (if you get architecture errors):**
+```bash
+./run_chat.sh
+```
 
 ## Usage
 
-1. **Activate your virtual environment** (if not already activated):
-   ```bash
-   source .venv/bin/activate  # On Windows: .venv\Scripts\activate
-   ```
-
-2. **Run the application:**
-   ```bash
-   python chat.py
-   ```
-
-3. **Start chatting:**
-   - Type your message and press Enter
-   - The AI will respond with contextual awareness of the conversation
-   - Type `quit` to exit the application
-   - Press `Ctrl+C` for immediate exit
-
-## Example
+When you start the app, choose a mode:
 
 ```
-OpenAI Chat (type 'quit' to exit)
-----------------------------------------
-
-You: Hello! How are you today?
-
-Assistant: Hello! I'm doing well, thank you for asking. I'm here and ready to help you with any questions or tasks you might have. How are you doing today?
-
-You: Can you help me with Python programming?
-
-Assistant: Absolutely! I'd be happy to help you with Python programming. Whether you need help with:
-
-- Basic syntax and concepts
-- Debugging code
-- Best practices
-- Specific libraries or frameworks
-- Project architecture
-- Or any other Python-related questions
-
-Just let me know what you're working on or what you'd like to learn!
-
-You: quit
-Goodbye!
+1. Normal Chat - Regular conversation with AI
+2. Book Chat - Ask questions about a book (RAG)
 ```
 
-## Error Handling
+### Normal Chat
+- Type your messages and press Enter
+- Conversation history is automatically saved
+- Type `quit` to exit
 
-The application handles various error scenarios:
-
-- **Missing API Key**: Checks for the presence of the OpenAI API key in environment variables
-- **Authentication Errors**: Validates API key authenticity
-- **Rate Limiting**: Handles API rate limit exceeded errors
-- **Network Issues**: Manages general API connectivity problems
-- **Keyboard Interrupts**: Graceful handling of Ctrl+C
+### Book Chat
+- First time: Enter path to your book file (`.txt` or `.pdf`)
+- Example: `sample_book.txt`
+- Wait for processing (done once per book)
+- Ask questions about the book
+- Get answers based only on book content
 
 ## Project Structure
 
 ```
-practice/
-├── chat.py           # Main application file
-├── requirements.txt  # Python dependencies
-├── .env             # Environment variables (create this)
-├── .gitignore       # Git ignore patterns
-└── README.md        # Project documentation
+├── chat.py                    # Main application
+├── book_loader.py             # Text/PDF processing & chunking
+├── vector_store.py            # Pinecone & OpenAI embeddings
+├── test_rag.py               # Test script for RAG
+├── sample_book.txt           # Sample book for testing
+├── requirements.txt          # Python dependencies
+├── .env.example              # Environment variables template
+└── run_chat.sh              # ARM64 compatibility script
 ```
 
-## Dependencies
+## How Book Chat (RAG) Works
 
-- `openai`: Official OpenAI Python client library
-- `python-dotenv`: Loads environment variables from .env files
+```
+1. Upload Book → Split into chunks → Generate embeddings → Store in Pinecone
 
-## Contributing
+2. Ask Question → Search similar chunks → Send to GPT → Get answer based on book
+```
 
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Add tests if applicable
-5. Submit a pull request
+**Why RAG?**
+- Prevents AI hallucination
+- Answers based on actual document content
+- Works with any book/document
+- Provides source citations
+
+## Testing
+
+Try the included sample book:
+
+```bash
+source .venv/bin/activate
+python chat.py
+# Choose option 2 (Book Chat)
+# Enter: sample_book.txt
+# Ask: "Who is Luna?"
+```
+
+## Troubleshooting
+
+**Architecture errors on Mac?**
+```bash
+./run_chat.sh
+```
+
+**API authentication error?**
+- Check `.env` file has correct API keys
+- Verify OpenAI account has credits
+
+**Module not found?**
+```bash
+source .venv/bin/activate
+pip install -r requirements.txt
+```
+
+**Pinecone index not found?**
+- Create index named `book-chat`
+- Dimensions: `1536`, Metric: `cosine`
+
+## Technologies Used
+
+- **OpenAI GPT-3.5-turbo** - Conversation AI
+- **OpenAI text-embedding-ada-002** - Vector embeddings
+- **Pinecone** - Vector database
+- **PyPDF2** - PDF text extraction
+- **python-dotenv** - Environment management
 
 ## License
 
-This project is open source and available under the MIT License.
-
-## Support
-
-If you encounter any issues or have questions, please open an issue on GitHub.
+This is a learning project for educational purposes.
