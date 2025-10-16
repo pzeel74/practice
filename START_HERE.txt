@@ -1,0 +1,52 @@
+===============================================
+   HOW TO RUN THE CHAT APPLICATION
+===============================================
+
+Your Terminal is running in Rosetta (x86_64) mode.
+This causes architecture mismatches with ARM64 packages.
+
+===============================================
+   EASIEST WAY TO RUN:
+===============================================
+
+Copy and paste this command in your terminal:
+
+    arch -arm64 /bin/bash -c "cd ~/Documents/technical/learning/Practice && source .venv/bin/activate && python chat.py"
+
+Or simply:
+
+    ./run_chat.sh
+
+===============================================
+   PERMANENT FIX (Optional):
+===============================================
+
+Fix your Terminal to run in native ARM64 mode:
+
+1. Quit Terminal completely (Cmd+Q)
+
+2. Open Finder → Go to Applications → Utilities
+
+3. Right-click on "Terminal" app → Get Info
+
+4. UNCHECK the box "Open using Rosetta"
+   (If it's already unchecked, you're good!)
+
+5. Reopen Terminal
+
+6. Now you can simply run:
+
+   source .venv/bin/activate
+   python chat.py
+
+===============================================
+   TEST IF IT'S FIXED:
+===============================================
+
+Run this command to check your architecture:
+
+    arch
+
+Should show: arm64 (not i386 or x86_64)
+
+===============================================
