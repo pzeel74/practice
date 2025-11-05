@@ -1,76 +1,15 @@
-# Environment variables - CRITICAL: Never commit these!
+# Step 7: Required .gitignore entries
+
+# Environment variables - Contains API keys
 .env
-.env.*
-.env.local
-.env.*.local
-*.env
-*.env.*
 
-# API Keys and secrets
-*_API_KEY*
-*_SECRET*
-secrets/
-credentials/
-
-# Python
+# Python cache
 __pycache__/
-*.py[cod]
-*$py.class
-*.so
-.Python
-build/
-develop-eggs/
-dist/
-downloads/
-eggs/
-.eggs/
-lib/
-lib64/
-parts/
-sdist/
-var/
-wheels/
-share/python-wheels/
-*.egg-info/
-.installed.cfg
-*.egg
-MANIFEST
+*.pyc
 
-# Virtual environments
+# Uploaded files
+temp/
+
+# Virtual environment
 venv/
 .venv/
-env/
-ENV/
-env.bak/
-venv.bak/
-
-# IDE files
-.vscode/
-.idea/
-*.swp
-*.swo
-*~
-
-# macOS
-.DS_Store
-.AppleDouble
-.LSOverride
-
-# Windows
-Thumbs.db
-ehthumbs.db
-Desktop.ini
-
-# Logs
-*.log
-logs/
-
-# Temporary files
-*.tmp
-*.temp
-
-# Node modules (if any JavaScript tooling is added)
-node_modules/
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
