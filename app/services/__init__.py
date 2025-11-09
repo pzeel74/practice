@@ -21,10 +21,12 @@ from .openai_service import OpenAIService
 from .pinecone_service import PineconeService
 from .book_processing_service import BookProcessingService
 from .chat_service import ChatService
+from .auth_service import AuthService
 
 __all__ = [
     "OpenAIService",
     "PineconeService",
     "BookProcessingService",
     "ChatService",
+    "AuthService",
 ]

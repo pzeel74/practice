@@ -27,6 +27,26 @@ class UserCreate(BaseModel):
     name: str = Field(..., min_length=1, max_length=100, description="User's name")
 
 
+class UserRegister(BaseModel):
+    """Model for user registration with password."""
+    email: EmailStr = Field(..., description="User's email address")
+    password: str = Field(..., min_length=6, max_length=100, description="User's password (min 6 characters)")
+    name: str = Field(..., min_length=1, max_length=100, description="User's full name")
+
+
+class UserLogin(BaseModel):
+    """Model for user login."""
+    email: EmailStr = Field(..., description="User's email address")
+    password: str = Field(..., description="User's password")
+
+
+class TokenResponse(BaseModel):
+    """Model for JWT token response."""
+    access_token: str = Field(..., description="JWT access token")
+    token_type: str = Field(default="bearer", description="Token type")
+    user: Dict[str, Any] = Field(..., description="User information")
+
+
 class UserResponse(BaseModel):
     """Model for user response."""
     id: str

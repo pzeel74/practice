@@ -82,3 +82,39 @@ class UsersRepository:
             return response.data[0] if response.data else None
         except Exception as e:
             raise Exception(f"Error in get_user_by_email: {e}")
+
+    async def create_user(self, email: str, name: str, hashed_password: str) -> Dict:
+        """
+        Create a new user with hashed password.
+
+        Args:
+            email: User's email address
+            name: User's name
+            hashed_password: Bcrypt hashed password
+
+        Returns:
+            Dict with created user data including 'id', 'email', 'name', 'created_at'
+
+        Raises:
+            Exception: If database operation fails or email already exists
+        """
+        try:
+            # Check if user already exists
+            existing_user = await self.get_user_by_email(email)
+            if existing_user:
+                raise Exception(f"User with email {email} already exists")
+
+            # Create new user
+            response = await asyncio.to_thread(
+                lambda: self.supabase.table("users").insert({
+                    "email": email,
+                    "name": name,
+                    "password": hashed_password
+                }).execute()
+            )
+
+            print(f"✅ Created new user: {email}")
+            return response.data[0]
+
+        except Exception as e:
+            raise Exception(f"Error in create_user: {e}")

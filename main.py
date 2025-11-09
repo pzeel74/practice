@@ -8,7 +8,7 @@ Run the application:
 """
 
 from fastapi import FastAPI
-from app.routers import books_router, chat_router
+from app.routers import users_router, books_router, chat_router
 
 # =============================================================================
 # STEP 5 REQUIREMENT 1: Initialize FastAPI app
@@ -19,6 +19,7 @@ app = FastAPI()
 # =============================================================================
 # STEP 5 REQUIREMENT 2: Include all routers
 # =============================================================================
+app.include_router(users_router)
 app.include_router(books_router)
 app.include_router(chat_router)
 
